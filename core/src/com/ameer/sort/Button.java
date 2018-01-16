@@ -14,7 +14,13 @@ public class Button extends Sprite {
     public Button(String sImg, float fX, float fY){
         super(new Texture(sImg));
         setPosition(fX, fY);
-        setSize(100,100);
+        //setSize(100,100);
+
+    }
+    public void drawRect(){
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.rect(getX(),getY(),getWidth(),getHeight());
+        shapeRenderer.end();
     }
     public boolean isHit(float fX, float fY){
         if(getBoundingRectangle().contains(fX,fY)){

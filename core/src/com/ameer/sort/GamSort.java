@@ -16,6 +16,7 @@ public class GamSort extends Game {
 		viewport.apply();
 		camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
 		setScreen(new ScrGame(this));
+
 	}
 
 	@Override

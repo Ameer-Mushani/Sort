@@ -7,7 +7,9 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -44,6 +46,11 @@ public class ScrGame implements Screen, InputProcessor {
     ArrayList<Box> arBoxes = new ArrayList<Box>();
     Box boxRoof, boxFloor;
     SpriteBatch batch;
+
+    FreeTypeFontGenerator generator;
+    FreeTypeFontGenerator.FreeTypeFontParameter parameter;
+    BitmapFont font;
+    int nScore = 0;
     public ScrGame(GamSort _game) {
         game = _game;
         camera = new OrthographicCamera();
@@ -68,6 +75,13 @@ public class ScrGame implements Screen, InputProcessor {
         batch = new SpriteBatch();
         batch.setProjectionMatrix(camera.combined);
         spawnBalls(2); //DO NOT SET TO 0!!
+
+        generator = new FreeTypeFontGenerator(Gdx.files.internal("Pokemon GB.ttf"));
+        parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 100;
+        parameter.color = Color.BLACK;
+        font = generator.generateFont(parameter);
+
     }
 
     @Override
@@ -75,7 +89,9 @@ public class ScrGame implements Screen, InputProcessor {
         Gdx.gl.glClearColor(253 / 255f, 247 / 255f, 239 / 255f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         camera.update();
-
+        batch.begin();
+        font.draw(batch, Integer.toString(nScore), viewport.getWorldWidth()/2, viewport.getWorldHeight()/2);
+        batch.end();
         boxFloor.render();
         boxRoof.render();
         iterator = arBalls.listIterator();
@@ -89,35 +105,16 @@ public class ScrGame implements Screen, InputProcessor {
                     gameOver();
                 }
                 else{
+                    nScore ++;
                     iterator.remove();
                 }
             }
         }
 
-//        if(ballDragged != null) {
-//            ballDragged.render();
-//            if(!ballDragged.isAlive){
-//                ballDragged = null;
-//            }
-//        }
-//        iterator = arBallsDragged.listIterator();
-//        while(iterator.hasNext()){
-//            Ball ballDragged = iterator.next();
-//            ballDragged.render();
-//            if(ballDragged.isAlive) {
-//                ballDragged.render();
-//            }
-//            else{
-//                iterator.remove();
-//            }
-//        }
         for (Ball ballDragged: arBallsDragged){
             ballDragged.render();
         }
         arBallsDragged.clear();
-
-        //disposeBall();
-
     }
     private void ballDraw(Ball ball){
         ball.render();
